@@ -80,7 +80,7 @@ class Reader:
         for i in range(2):
             self._make_thread(self._count_bytes, (self._dirs[i],))
 
-        sys.stdout.write("\nCounting files...")
+        sys.stdout.write("\nCounting folder sizes...")
 
         for thread in self._threads:
             thread.join()

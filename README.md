@@ -5,6 +5,11 @@ A Python script to compare two folders and find any missing files. The script ig
 Note: Symbolic links are ignored and hard links are treated as duplicate files.
 
 ## Usage
-Download the script and run `python3 compare_folders.py </path/to/folder1> </path/to/folder2> [nr of threads]` in your terminal.
+Download the script and run:
+
+```
+python3 compare_folders.py </path/to/folder1> </path/to/folder2> [nr of threads]
+```
+
 
 Threads are optional, but using multiple threads will likely improve performance.

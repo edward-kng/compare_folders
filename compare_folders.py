@@ -127,7 +127,12 @@ def main():
 
     dirs = (sys.argv[1], sys.argv[2])
     reader = Reader(dirs[0], dirs[1])
-    data = reader.read()
+    
+    try:
+        data = reader.read()
+    except KeyboardInterrupt:
+            print("\nInterrupted: cancelling...")
+            sys.exit(0)
     
     if data[0].keys() == data[1].keys():
         print(f"\n\nNo differences found. {dirs[0]} and {dirs[1]} contain all the same files.")

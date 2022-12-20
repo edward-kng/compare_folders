@@ -19,11 +19,8 @@ class Reader:
             if os.path.isdir(item_path):
                 self._make_thread(self._count_bytes, (item_path,))
             elif not os.path.islink(item_path):
-                self._lock.acquire()
-
-                self._nr_bytes += os.path.getsize(item_path)
-
-                self._lock.release()
+                with self._lock:
+                    self._nr_bytes += os.path.getsize(item_path)
 
     def _read_files(self, path, dict):
         for item in os.listdir(path):
@@ -41,9 +38,8 @@ class Reader:
         file.close()
         checksum = sha256(data).hexdigest()
 
-        self._lock.acquire()
-
-        self._nr_bytes_read += os.path.getsize(path)
+        with self._lock:
+            self._nr_bytes_read += os.path.getsize(path)
 
         if self._nr_bytes > 0:
             sys.stdout.write(
@@ -58,21 +54,16 @@ class Reader:
         
         dict[checksum].append(path)
 
-        self._lock.release()
-
     def _make_thread(self, functionName, functionArgs):
         if active_count() < NR_THREADS:
-            self._lock.acquire()
-
-            thread = Thread(
-                    target=functionName,
-                    args=functionArgs
-                )
+            with self._lock:
+                thread = Thread(
+                        target=functionName,
+                        args=functionArgs
+                    )
             
-            thread.start()
-            self._threads.append(thread)
-
-            self._lock.release()
+                thread.start()
+                self._threads.append(thread)
         else:
             functionName(*functionArgs)
 
